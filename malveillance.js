@@ -2,6 +2,7 @@ if(sessionStorage.getItem('formData') != undefined){
 
     data = JSON.parse(sessionStorage.getItem('formData'));
     //console.log(data);
+//test
     console.log('form ok')
     
 }else{
