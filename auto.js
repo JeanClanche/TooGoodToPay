@@ -69,7 +69,7 @@ async function updateResults(lat, lng) {
         row1col1.classList.add('col', 'align-self-center', 'text-center')
         const shopName = document.createElement('span')
         shopName.classList.add('fw-bold')
-        shopName.textContent = e['item']['name']
+        shopName.textContent = e['displayName'].split('(')[0]
         row1col1.append(shopName)
 
         const row1col2 = document.createElement('div')
@@ -96,9 +96,12 @@ async function updateResults(lat, lng) {
 
         if(e["pickupInterval"]){
             const heure = document.createElement('span')
-            const deb = e["pickupInterval"]["start"].substring(11, 16)
-            const fin = e["pickupInterval"]["end"].substring(11, 16)
-            heure.textContent = `${deb} - ${fin}`
+            const start = new Date(Date.parse(e["pickupInterval"]["start"]))
+            const end = new Date(Date.parse(e["pickupInterval"]["end"]))
+            const hdeb = `${start.getHours()}:${minutes(start.getMinutes())}`
+            const hfin = `${end.getHours()}:${minutes(end.getMinutes())}`
+
+            heure.textContent = `${hdeb} - ${hfin}`
             secondRow.append(heure, document.createElement('br'))
         }
 
@@ -140,5 +143,14 @@ function clearResults(){
     const list = document.getElementById('colRes')
     while(list.lastChild){
         list.removeChild(list.lastChild)
+    }
+}
+
+function minutes(n){
+    //rajoute un 0 devant le nombre de minutes si il est <10
+    if(n<10){
+        return `0${n.toString()}`
+    }else{
+        return n
     }
 }
