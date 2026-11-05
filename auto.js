@@ -92,6 +92,17 @@ async function updateResults(lat, lng) {
             default :
                 amount.textContent = `${e["itemsAvailable"]} paniers disponibles`
         }
+        secondRow.append(amount, document.createElement('br'))
+
+        if(e["pickupInterval"]){
+            const heure = document.createElement('span')
+            const deb = e["pickupInterval"]["start"].substring(11, 16)
+            const fin = e["pickupInterval"]["end"].substring(11, 16)
+            heure.textContent = `${deb} - ${fin}`
+            secondRow.append(heure, document.createElement('br'))
+        }
+
+
         const price = document.createElement('span')
         price.classList.add('fw-bold')
         const n = e["item"]["itemPrice"]["minorUnits"].toString()
@@ -99,6 +110,7 @@ async function updateResults(lat, lng) {
         const eur = n.substring(0, n.length-decimals)
         const ctm = n.substring(n.length-decimals)
         price.textContent = `${eur},${ctm}€`
+        secondRow.append(price, document.createElement('br'))
 
         const thirdRow = document.createElement('div')
         thirdRow.classList.add('row', 'justify-content-end', 'mb-2')
@@ -112,12 +124,6 @@ async function updateResults(lat, lng) {
 
 
         firstRow.append(row1col1, row1col2)
-        secondRow.append(
-            amount,
-            document.createElement('br'),
-            price,
-            document.createElement('br')
-        )
         thirdRow.append(row3col1)
 
         mainRow.append(
