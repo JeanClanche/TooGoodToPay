@@ -67,7 +67,7 @@ async function updateResults(lat, lng) {
         row1col1.classList.add('col', 'align-self-center', 'text-center')
         const shopName = document.createElement('span')
         shopName.classList.add('fw-bold')
-        shopName.textContent = e['displayName'].split('(')[0]
+        shopName.textContent = e['store']['storeName']
         row1col1.append(shopName)
 
         const row1col2 = document.createElement('div')
@@ -99,7 +99,7 @@ async function updateResults(lat, lng) {
         const address = document.createElement('span')
         address.classList.add('fs-6')
         const link = document.createElement('a')
-        link.setAttribute('href', `geo:${lat},${lng}`)
+        link.setAttribute('href', `geo:${e['store']['storeLocation']['location']['latitude']},${e['store']['storeLocation']['location']['longitude']}`)
         link.setAttribute('target', '_blank')
         link.textContent = e["store"]["storeLocation"]['address']['addressLine']
         address.append(link)
