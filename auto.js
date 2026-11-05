@@ -14,13 +14,10 @@ document.addEventListener("DOMContentLoaded", async function() {
 
 async function getCity(){
     const value = document.getElementById('ville').value
-    console.log(value)
     let url=`https://www.toogoodtogo.com/api/location?keyword=${value}&locale=fr`
     const json = await fetch(url)
     const raw = JSON.parse(await json.text())
     const list = raw['response']['payload']
-
-    console.log(await list)
 
     clearOptions()
     for (let i = 0 ; i<list.length ; i++){
@@ -57,6 +54,7 @@ async function updateResults(lat, lng) {
     clearResults()
     const results = await getShops(lat, lng)
     console.log(results)
+    let i = 0
     results.forEach((e) => {
 
         const mainRow = document.createElement('div')
@@ -73,14 +71,14 @@ async function updateResults(lat, lng) {
         row1col1.append(shopName)
 
         const row1col2 = document.createElement('div')
-        row1col2.classList.add('col-3')
+        row1col2.classList.add('col-3', 'align-self-center')
         const img = document.createElement('img')
         img.classList.add('img-fluid', 'rounded-circle')
         img.setAttribute('src', e['item']['logoPicture']['currentUrl'])
         row1col2.append(img)
 
         const secondRow = document.createElement('div')
-        secondRow.classList.add('row')
+        secondRow.classList.add('row', 'mb-2')
         const amount = document.createElement('span')
         switch (e["itemsAvailable"]){
             case 0 :
@@ -93,6 +91,11 @@ async function updateResults(lat, lng) {
                 amount.textContent = `${e["itemsAvailable"]} paniers disponibles`
         }
         secondRow.append(amount, document.createElement('br'))
+
+        const type = document.createElement('span')
+        type.textContent = e["item"]["name"]
+        secondRow.append(type, document.createElement('br'))
+
 
         if(e["pickupInterval"]){
             const heure = document.createElement('span')
@@ -116,26 +119,70 @@ async function updateResults(lat, lng) {
         secondRow.append(price, document.createElement('br'))
 
         const thirdRow = document.createElement('div')
-        thirdRow.classList.add('row', 'justify-content-end', 'mb-2')
+        thirdRow.classList.add('row', 'justify-content-around', 'mb-2')
+
         const row3col1 = document.createElement('div')
-        row3col1.classList.add('text-end', 'p-0')
+        row3col1.classList.add('col')
+        const inputNumber = document.createElement('input')
+        inputNumber.classList.add('form-control', 'text-center')
+        inputNumber.setAttribute('type', 'number')
+        inputNumber.setAttribute('id', `input${i}`)
+        inputNumber.setAttribute('disabled', '')
+        inputNumber.value = 1
+
+        const btnLess = document.createElement('button')
+        btnLess.classList.add('btn', 'btn-primary')
+        btnLess.textContent = "-"
+        const btnMore = document.createElement('button')
+        btnMore.classList.add('btn', 'btn-primary')
+        btnMore.textContent = "+"
+        
+        const colInput = document.createElement('div')
+        colInput.classList.add('col-4', 'p-0')
+        const colLess = document.createElement('div')
+        colLess.classList.add('col-4', 'text-center')
+        const colMore = document.createElement('div')
+        colMore.classList.add('col-4', 'text-center')
+        const rowInput = document.createElement('div')
+        const id = `input${i}`
+        btnMore.addEventListener('click', function(){
+            document.getElementById(id).value++
+        })
+        btnLess.addEventListener('click', function(){
+            if(document.getElementById(id).value > 1 ){
+                document.getElementById(id).value--
+            }
+        })
+        rowInput.classList.add('row')
+        colInput.append(inputNumber)
+        colLess.append(btnLess)
+        colMore.append(btnMore)
+        rowInput.append(colLess, colInput, colMore)
+        row3col1.append(rowInput)
+
+        const row3col2 = document.createElement('div')
+        row3col2.classList.add('col', 'text-end', 'p-0', 'align-self-center')
         const btn = document.createElement('button')
         btn.setAttribute('type', 'button')
         btn.classList.add('btn', 'btn-success')
         btn.textContent = 'Selectionner'
-        row3col1.append(btn)
+        row3col2.append(btn)
 
 
         firstRow.append(row1col1, row1col2)
-        thirdRow.append(row3col1)
+        thirdRow.append(row3col1, row3col2)
+
+        const hr = document.createElement('hr')
+        hr.classList.add('mb-2')
 
         mainRow.append(
             firstRow,
-            document.createElement('hr'),
+            hr,
             secondRow,
             thirdRow
         )
         document.getElementById("colRes").append(mainRow)
+        i++
     })
 }
 
