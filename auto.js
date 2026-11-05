@@ -82,7 +82,7 @@ async function updateResults(lat, lng) {
         const amount = document.createElement('span')
         switch (e["itemsAvailable"]){
             case 0 :
-                amount.textContent = "Aucun panier restant"
+                amount.textContent = "Aucun panier disponible"
                 break;
             case 1 :
                 amount.textContent = "1 panier disponible"
@@ -95,6 +95,15 @@ async function updateResults(lat, lng) {
         const type = document.createElement('span')
         type.textContent = e["item"]["name"]
         secondRow.append(type, document.createElement('br'))
+
+        const address = document.createElement('span')
+        address.classList.add('fs-6')
+        const link = document.createElement('a')
+        link.setAttribute('href', `geo:${lat},${lng}`)
+        link.setAttribute('target', '_blank')
+        link.textContent = e["store"]["storeLocation"]['address']['addressLine']
+        address.append(link)
+        secondRow.append(address, document.createElement('br'))
 
 
         if(e["pickupInterval"]){
