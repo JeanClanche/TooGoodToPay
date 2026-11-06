@@ -99,7 +99,7 @@ async function updateResults(lat, lng) {
         const address = document.createElement('span')
         address.classList.add('fs-6')
         const link = document.createElement('a')
-        link.setAttribute('href', `geo:${e['store']['storeLocation']['location']['latitude']},${e['store']['storeLocation']['location']['longitude']}`)
+        link.setAttribute('href', `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e['store']['storeName']+" "+e['store']['storeLocation']['address']['addressLine'])}`)
         link.setAttribute('target', '_blank')
         link.textContent = e["store"]["storeLocation"]['address']['addressLine']
         address.append(link)
@@ -142,6 +142,7 @@ async function updateResults(lat, lng) {
         const btnLess = document.createElement('button')
         btnLess.classList.add('btn', 'btn-primary')
         btnLess.textContent = "-"
+        btnLess.setAttribute('disabled', '')
         const btnMore = document.createElement('button')
         btnMore.classList.add('btn', 'btn-primary')
         btnMore.textContent = "+"
@@ -156,10 +157,14 @@ async function updateResults(lat, lng) {
         const id = `input${i}`
         btnMore.addEventListener('click', function(){
             document.getElementById(id).value++
+            if(document.getElementById(id).value > 1){
+                btnLess.removeAttribute('disabled')
+            }
         })
         btnLess.addEventListener('click', function(){
-            if(document.getElementById(id).value > 1 ){
-                document.getElementById(id).value--
+            document.getElementById(id).value--
+            if(document.getElementById(id).value == 1){
+                btnLess.setAttribute('disabled', '')
             }
         })
         rowInput.classList.add('row')
@@ -175,6 +180,9 @@ async function updateResults(lat, lng) {
         btn.setAttribute('type', 'button')
         btn.classList.add('btn', 'btn-success')
         btn.textContent = 'Selectionner'
+        btn.addEventListener('click', function(){
+            console.log(`${eur},${ctm}€`)
+        })
         row3col2.append(btn)
 
 
