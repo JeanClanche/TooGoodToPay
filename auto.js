@@ -66,7 +66,7 @@ async function updateResults(lat, lng, page=0) {
         firstRow.classList.add('row', 'my-1')
 
         const row1col1 = document.createElement('div')
-        row1col1.classList.add('col', 'align-self-center', 'text-center')
+        row1col1.classList.add('col', 'align-self-center', 'text-center', 'py-2', 'px-0')
         const shopName = document.createElement('span')
         shopName.classList.add('fw-bold')
         shopName.textContent = e['store']['storeName']
