@@ -99,6 +99,7 @@ async function updateResults(lat, lng) {
         const address = document.createElement('span')
         address.classList.add('fs-6')
         const link = document.createElement('a')
+        //ez
         link.setAttribute('href', `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e['store']['storeName']+" "+e['store']['storeLocation']['address']['addressLine'])}`)
         link.setAttribute('target', '_blank')
         link.textContent = e["store"]["storeLocation"]['address']['addressLine']
