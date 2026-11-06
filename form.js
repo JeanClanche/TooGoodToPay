@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                 const dataUrl = event.target.result;
                 try {
                     sessionStorage.setItem('customLogo', dataUrl);
-                    window.location.href = 'malveillance.html';
+                    window.location.href = '/TooGoodToPay/malveillance';
                 } catch (err) {
                     alert("Erreur lors de la sauvegarde : l'image est probablement trop lourde.");
                 }
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", async function() {
             reader.readAsDataURL(imgInput);
         }else{
             sessionStorage.removeItem('customLogo')
-            window.location.href = 'malveillance.html';
+            window.location.href = '/TooGoodToPay/malveillance';
         }
     });
 

@@ -202,7 +202,7 @@ async function updateResults(lat, lng, page=0) {
             const data = Object.fromEntries(formData.entries())
             sessionStorage.setItem('formData', JSON.stringify(data))
                  
-            window.location.href = 'malveillance.html';
+            window.location.href = '/TooGoodToPay/malveillance';
         })
 
         row3col2.append(btn)
