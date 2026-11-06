@@ -32,6 +32,22 @@ document.addEventListener("DOMContentLoaded", async function() {
     const list = JSON.parse(await json.text())
 
     let path = ''
+    switch (data.logo){
+        case 'custom':
+            if(customLogo != null){
+                path = customLogo
+            }else{
+                path = list[0]['path']
+            }
+            break;
+        case 'link' :
+            path = data.imgLink
+            console.log(path)
+            break;
+        default :
+            path = `img/${list[data.logo]['path']}`            
+    }
+/*
     if(data.logo != 'custom'){
         path = `img/${list[data.logo]['path']}`
     }else{
@@ -41,6 +57,7 @@ document.addEventListener("DOMContentLoaded", async function() {
             path = list[0]['path']
         }
     }
+*/
     document.getElementById('logo').setAttribute('src', path)
 
     const order = randomOrder()

@@ -99,20 +99,20 @@ async function updateResults(lat, lng) {
         const address = document.createElement('span')
         address.classList.add('fs-6')
         const link = document.createElement('a')
-        //ez
         link.setAttribute('href', `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e['store']['storeName']+" "+e['store']['storeLocation']['address']['addressLine'])}`)
         link.setAttribute('target', '_blank')
         link.textContent = e["store"]["storeLocation"]['address']['addressLine']
         address.append(link)
         secondRow.append(address, document.createElement('br'))
 
-
+        let hdeb = "19:00"
+        let hfin = "21:00"
         if(e["pickupInterval"]){
             const heure = document.createElement('span')
             const start = new Date(Date.parse(e["pickupInterval"]["start"]))
             const end = new Date(Date.parse(e["pickupInterval"]["end"]))
-            const hdeb = `${start.getHours()}:${minutes(start.getMinutes())}`
-            const hfin = `${end.getHours()}:${minutes(end.getMinutes())}`
+            hdeb = `${start.getHours()}:${minutes(start.getMinutes())}`
+            hfin = `${end.getHours()}:${minutes(end.getMinutes())}`
 
             heure.textContent = `${hdeb} - ${hfin}`
             secondRow.append(heure, document.createElement('br'))
@@ -180,10 +180,29 @@ async function updateResults(lat, lng) {
         const btn = document.createElement('button')
         btn.setAttribute('type', 'button')
         btn.classList.add('btn', 'btn-success')
-        btn.textContent = 'Selectionner'
-        btn.addEventListener('click', function(){
-            console.log(`${eur},${ctm}€`)
+        btn.textContent = 'Valider'
+
+        //soumission du formulaire et redirection
+        const defaultText = "Le commerçant fournira l'emballage, mais nous vous encourageons à apporter votre propre sac pour ramener le panier chez vous."
+        btn.addEventListener('click', async function(){  
+            const formData = new FormData()
+            formData.append("logo", "link")
+            formData.append("imgLink", e['item']['logoPicture']['currentUrl'])
+            formData.append("deb", hdeb)
+            formData.append("fin", hfin)
+            formData.append("prix", parseFloat(`${eur}.${ctm}`))
+            formData.append("nb", document.getElementById(id).value)
+            formData.append("adresse", e["store"]["storeLocation"]['address']['addressLine'])
+            formData.append("type", e["item"]["name"])
+            formData.append("ing", defaultText)
+
+            const data = Object.fromEntries(formData.entries())
+            sessionStorage.setItem('formData', JSON.stringify(data))
+
+            console.log(data)            
+            window.location.href = 'malveillance.html';
         })
+
         row3col2.append(btn)
 
 
