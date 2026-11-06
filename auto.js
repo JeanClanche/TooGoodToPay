@@ -1,3 +1,5 @@
+let k = 0
+
 document.addEventListener("DOMContentLoaded", async function() {
     let t
     document.getElementById('ville').addEventListener('input', function(){
@@ -55,7 +57,6 @@ async function getShops(lat, lng, page){
 async function updateResults(lat, lng, page=0) {
     const results = await getShops(lat, lng, page)
     console.log(results)
-    let i = 0
     results.forEach((e) => {
 
         const mainRow = document.createElement('div')
@@ -137,7 +138,7 @@ async function updateResults(lat, lng, page=0) {
         const inputNumber = document.createElement('input')
         inputNumber.classList.add('form-control', 'text-center')
         inputNumber.setAttribute('type', 'number')
-        inputNumber.setAttribute('id', `input${i}`)
+        inputNumber.setAttribute('id', `input${k}`)
         inputNumber.setAttribute('disabled', '')
         inputNumber.value = 1
 
@@ -156,7 +157,7 @@ async function updateResults(lat, lng, page=0) {
         const colMore = document.createElement('div')
         colMore.classList.add('col-4', 'text-center')
         const rowInput = document.createElement('div')
-        const id = `input${i}`
+        const id = `input${k}`
         btnMore.addEventListener('click', function(){
             document.getElementById(id).value++
             if(document.getElementById(id).value > 1){
@@ -220,7 +221,7 @@ async function updateResults(lat, lng, page=0) {
             thirdRow
         )
         document.getElementById("colRes").append(mainRow)
-        i++
+        k++
     })
 
     const btnNext = document.createElement('button')
@@ -228,10 +229,17 @@ async function updateResults(lat, lng, page=0) {
     btnNext.classList.add('btn', 'btn-primary')
     btnNext.setAttribute('id', 'btnNext')
     btnNext.addEventListener('click', function(){
-        document.getElementById('btnNext').remove()
+        document.getElementById('rowBtnNext').remove()
         updateResults(lat, lng, page+1)
     })
-    document.getElementById("colRes").append(btnNext)
+    const rowBtnNext = document.createElement('div')
+    rowBtnNext.classList.add('row', 'justify-content-center')
+    rowBtnNext.setAttribute('id', 'rowBtnNext')
+    const colBtnNext = document.createElement('div')
+    colBtnNext.classList.add('col-6', 'text-center', 'p-0')
+    colBtnNext.append(btnNext)
+    rowBtnNext.append(colBtnNext)
+    document.getElementById("colRes").append(rowBtnNext)
 }
 
 function clearResults(){
