@@ -29,11 +29,13 @@ async function getCity(){
         tr.addEventListener('click', function(){
             clearOptions()
             document.getElementById('ville').value = list[i]['displayName']
+            clearResults()
             updateResults(list[i]['center']['latitude'], list[i]['center']['longitude'])
         })
 
         document.getElementById('tbody').append(tr)
     }
+
 }
 
 function clearOptions(){
@@ -43,16 +45,15 @@ function clearOptions(){
     }
 }
 
-async function getShops(lat, lng){
-    const url = `https://www.toogoodtogo.com/api/surprise-bags?lat=${lat}&lng=${lng}&language=fr&locale=fr&page=0&withStockOnly=0`
+async function getShops(lat, lng, page){
+    const url = `https://www.toogoodtogo.com/api/surprise-bags?lat=${lat}&lng=${lng}&language=fr&locale=fr&page=${page}&withStockOnly=0`
     const json = await fetch(url)
     const raw = JSON.parse(await json.text())
     return await raw['payload']['items']
 }
 
-async function updateResults(lat, lng) {
-    clearResults()
-    const results = await getShops(lat, lng)
+async function updateResults(lat, lng, page=0) {
+    const results = await getShops(lat, lng, page)
     console.log(results)
     let i = 0
     results.forEach((e) => {
@@ -195,11 +196,11 @@ async function updateResults(lat, lng) {
             formData.append("adresse", e["store"]["storeLocation"]['address']['addressLine'])
             formData.append("type", e["item"]["name"])
             formData.append("ing", defaultText)
+            formData.append("nom", e["store"]['storeName'])
 
             const data = Object.fromEntries(formData.entries())
             sessionStorage.setItem('formData', JSON.stringify(data))
-
-            console.log(data)            
+                 
             window.location.href = 'malveillance.html';
         })
 
@@ -221,6 +222,16 @@ async function updateResults(lat, lng) {
         document.getElementById("colRes").append(mainRow)
         i++
     })
+
+    const btnNext = document.createElement('button')
+    btnNext.textContent = "Charger plus"
+    btnNext.classList.add('btn', 'btn-primary')
+    btnNext.setAttribute('id', 'btnNext')
+    btnNext.addEventListener('click', function(){
+        document.getElementById('btnNext').remove()
+        updateResults(lat, lng, page+1)
+    })
+    document.getElementById("colRes").append(btnNext)
 }
 
 function clearResults(){
