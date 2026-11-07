@@ -84,7 +84,7 @@ async function updateResults(lat, lng, page=0) {
         const amount = document.createElement('span')
         switch (e["itemsAvailable"]){
             case 0 :
-                amount.textContent = "Aucun panier disponible"
+                amount.textContent = e['itemTags'][0]["shortText"]
                 amount.classList.add('text-danger')
                 break;
             case 1 :
@@ -98,7 +98,11 @@ async function updateResults(lat, lng, page=0) {
         secondRow.append(amount, document.createElement('br'))
 
         const type = document.createElement('span')
-        type.textContent = e["item"]["name"]
+        if(e["item"]["name"] != ""){
+            type.textContent = e["item"]["name"]
+        }else{
+            type.textContent = "Panier Surprise"
+        }
         secondRow.append(type, document.createElement('br'))
 
         const address = document.createElement('span')
@@ -126,7 +130,7 @@ async function updateResults(lat, lng, page=0) {
             }else if(start.getDate() == ajd.getDate()+1){
                 jour = "Demain"
             }else{
-                jour = `Le ${start.getDate()}`
+                jour = `${start.getDate()} ${numberToMonth(start.getMonth())}`
             }
 
             heure.textContent = `${jour} ${hdeb} - ${hfin}`
@@ -268,5 +272,47 @@ function minutes(n){
         return `0${n.toString()}`
     }else{
         return n
+    }
+}
+
+function numberToMonth(n){
+    let result = ""
+    switch(n){
+        case 0 :
+            result = "Janvier"
+            break
+        case 1 :
+            result = "Février"
+            break
+        case 2 :
+            result = "Mars"
+            break
+        case 3 :
+            result = "Avril"
+            break
+        case 4 :
+            result = "Mai"
+            break
+        case 5 :
+            result = "Juin"
+            break
+        case 6 :
+            result = "Juillet"
+            break
+        case 7 :
+            result = "Aout"
+            break
+        case 8 :
+            result = "Septembre"
+            break
+        case 9 :
+            result = "Octobre"
+            break
+        case 10 :
+            result = "Novembre"
+            break
+        case 11 :
+            result = "Décembre"
+            break
     }
 }
