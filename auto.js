@@ -85,12 +85,15 @@ async function updateResults(lat, lng, page=0) {
         switch (e["itemsAvailable"]){
             case 0 :
                 amount.textContent = "Aucun panier disponible"
+                amount.classList.add('text-danger')
                 break;
             case 1 :
                 amount.textContent = "1 panier disponible"
+                amount.classList.add('text-warning')
                 break;
             default :
                 amount.textContent = `${e["itemsAvailable"]} paniers disponibles`
+                amount.classList.add('text-success')
         }
         secondRow.append(amount, document.createElement('br'))
 
@@ -109,6 +112,8 @@ async function updateResults(lat, lng, page=0) {
 
         let hdeb = "19:00"
         let hfin = "21:00"
+        let jour = ""
+        const ajd = new Date
         if(e["pickupInterval"]){
             const heure = document.createElement('span')
             const start = new Date(Date.parse(e["pickupInterval"]["start"]))
@@ -116,7 +121,15 @@ async function updateResults(lat, lng, page=0) {
             hdeb = `${start.getHours()}:${minutes(start.getMinutes())}`
             hfin = `${end.getHours()}:${minutes(end.getMinutes())}`
 
-            heure.textContent = `${hdeb} - ${hfin}`
+            if(start.getDate() == ajd.getDate()){
+                jour = "Aujourd'hui"
+            }else if(start.getDate() == ajd.getDate()+1){
+                jour = "Demain"
+            }else{
+                jour = `Le ${start.getDate()}`
+            }
+
+            heure.textContent = `${jour} ${hdeb} - ${hfin}`
             secondRow.append(heure, document.createElement('br'))
         }
 
