@@ -84,7 +84,11 @@ async function updateResults(lat, lng, page=0) {
         const amount = document.createElement('span')
         switch (e["itemsAvailable"]){
             case 0 :
-                amount.textContent = e['itemTags'][0]["shortText"]
+                if(e['itemTags'].length == 0){
+                    amount.textContent = "Pas de paniers"
+                }else{
+                    amount.textContent = e['itemTags'][0]["shortText"]
+                }
                 amount.classList.add('text-danger')
                 break;
             case 1 :
