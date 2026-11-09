@@ -16,41 +16,45 @@ document.addEventListener("DOMContentLoaded", async function() {
     })
 
     document.getElementById('switchDispo').addEventListener('click', function(){
-        clearResults()
-        updateResults(latSwitch, lngSwitch)
+        if(typeof latSwitch != "undefined" && typeof lngSwitch != "undefined"){
+            clearResults()
+            updateResults(latSwitch, lngSwitch)
+        }
     })
 })
 
 async function getCity(){
     const value = document.getElementById('ville').value
-    let url=`https://www.toogoodtogo.com/api/location?keyword=${value}&locale=fr`
-    url = `https://data.geopf.fr/geocodage/search?q=${value}`
-    const json = await fetch(url)
-    const raw = JSON.parse(await json.text())
-    const list = raw['features']
+    if(value.length >= 3){
+        let url=`https://www.toogoodtogo.com/api/location?keyword=${value}&locale=fr`
+        url = `https://data.geopf.fr/geocodage/search?q=${value}`
+        const json = await fetch(url)
+        const raw = JSON.parse(await json.text())
+        const list = raw['features']
 
-    clearOptions()
-    list.forEach((e) => {
-        const tr = document.createElement('tr')
-        const th = document.createElement('th')
-        if(e['properties']['type'] == "municipality"){
-            th.textContent = `${e['properties']['city']}, ${e['properties']['context']}`
-        }else{
-            th.textContent = e["properties"]['label']
-        }
-        tr.append(th)
+        clearOptions()
+        list.forEach((e) => {
+            const tr = document.createElement('tr')
+            const th = document.createElement('th')
+            if(e['properties']['type'] == "municipality"){
+                th.textContent = `${e['properties']['city']}, ${e['properties']['context']}`
+            }else{
+                th.textContent = e["properties"]['label']
+            }
+            tr.append(th)
 
-        tr.addEventListener('click', function(){
-            clearOptions()
-            document.getElementById('ville').value = e["properties"]['label']
-            clearResults()
-            latSwitch = e['geometry']['coordinates'][1]
-            lngSwitch = e['geometry']['coordinates'][0]
-            updateResults(e['geometry']['coordinates'][1], e['geometry']['coordinates'][0])
+            tr.addEventListener('click', function(){
+                clearOptions()
+                document.getElementById('ville').value = e["properties"]['label']
+                clearResults()
+                latSwitch = e['geometry']['coordinates'][1]
+                lngSwitch = e['geometry']['coordinates'][0]
+                updateResults(e['geometry']['coordinates'][1], e['geometry']['coordinates'][0])
+            })
+
+            document.getElementById('tbody').append(tr)
         })
-
-        document.getElementById('tbody').append(tr)
-    })
+    }
 
 }
 
