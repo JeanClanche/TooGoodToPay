@@ -51,13 +51,13 @@ async function getShops(lat, lng, page){
     const url = `https://www.toogoodtogo.com/api/surprise-bags?lat=${lat}&lng=${lng}&language=fr&locale=fr&page=${page}&withStockOnly=0`
     const json = await fetch(url)
     const raw = JSON.parse(await json.text())
-    return await raw['payload']['items']
+    return {items : await raw['payload']['items'], canLoadMore : await raw['canLoadMore']}
 }
 
 async function updateResults(lat, lng, page=0) {
     const results = await getShops(lat, lng, page)
-    console.log(results)
-    results.forEach((e) => {
+    console.log(results["items"])
+    results["items"].forEach((e) => {
 
         const mainRow = document.createElement('div')
         mainRow.classList.add('row', 'bg-light', 'rounded', 'mb-3', 'justify-content-center')
@@ -245,22 +245,24 @@ async function updateResults(lat, lng, page=0) {
         k++
     })
 
-    const btnNext = document.createElement('button')
-    btnNext.textContent = "Charger plus"
-    btnNext.classList.add('btn', 'btn-primary')
-    btnNext.setAttribute('id', 'btnNext')
-    btnNext.addEventListener('click', function(){
-        document.getElementById('rowBtnNext').remove()
-        updateResults(lat, lng, page+1)
-    })
-    const rowBtnNext = document.createElement('div')
-    rowBtnNext.classList.add('row', 'justify-content-center')
-    rowBtnNext.setAttribute('id', 'rowBtnNext')
-    const colBtnNext = document.createElement('div')
-    colBtnNext.classList.add('col-6', 'text-center', 'p-0')
-    colBtnNext.append(btnNext)
-    rowBtnNext.append(colBtnNext)
-    document.getElementById("colRes").append(rowBtnNext)
+    if(results["canLoadMore"]){
+        const btnNext = document.createElement('button')
+        btnNext.textContent = "Charger plus"
+        btnNext.classList.add('btn', 'btn-primary')
+        btnNext.setAttribute('id', 'btnNext')
+        btnNext.addEventListener('click', function(){
+            document.getElementById('rowBtnNext').remove()
+            updateResults(lat, lng, page+1)
+        })
+        const rowBtnNext = document.createElement('div')
+        rowBtnNext.classList.add('row', 'justify-content-center')
+        rowBtnNext.setAttribute('id', 'rowBtnNext')
+        const colBtnNext = document.createElement('div')
+        colBtnNext.classList.add('col-6', 'text-center', 'p-0')
+        colBtnNext.append(btnNext)
+        rowBtnNext.append(colBtnNext)
+        document.getElementById("colRes").append(rowBtnNext)
+    }
 }
 
 function clearResults(){
