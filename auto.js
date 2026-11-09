@@ -1,4 +1,6 @@
 let k = 0
+let latSwitch
+let lngSwitch
 
 document.addEventListener("DOMContentLoaded", async function() {
     let t
@@ -11,6 +13,11 @@ document.addEventListener("DOMContentLoaded", async function() {
         }else{
             clearOptions()
         }
+    })
+
+    document.getElementById('switchDispo').addEventListener('click', function(){
+        clearResults()
+        updateResults(latSwitch, lngSwitch)
     })
 })
 
@@ -37,6 +44,8 @@ async function getCity(){
             clearOptions()
             document.getElementById('ville').value = e["properties"]['label']
             clearResults()
+            latSwitch = e['geometry']['coordinates'][1]
+            lngSwitch = e['geometry']['coordinates'][0]
             updateResults(e['geometry']['coordinates'][1], e['geometry']['coordinates'][0])
         })
 
@@ -53,7 +62,14 @@ function clearOptions(){
 }
 
 async function getShops(lat, lng, page){
-    const url = `https://www.toogoodtogo.com/api/surprise-bags?lat=${lat}&lng=${lng}&language=fr&locale=fr&page=${page}&withStockOnly=0`
+    const switchValue = document.getElementById('switchDispo').checked
+    let stock
+    if(switchValue){
+        stock = 1
+    }else{
+        stock = 0
+    }
+    const url = `https://www.toogoodtogo.com/api/surprise-bags?lat=${lat}&lng=${lng}&language=fr&locale=fr&page=${page}&withStockOnly=${stock}`
     const json = await fetch(url)
     const raw = JSON.parse(await json.text())
     return {items : await raw['payload']['items'], canLoadMore : await raw['canLoadMore']}
