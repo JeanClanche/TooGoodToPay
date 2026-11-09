@@ -21,6 +21,16 @@ document.addEventListener("DOMContentLoaded", async function() {
             updateResults(latSwitch, lngSwitch)
         }
     })
+
+    document.getElementById('gpsButton').addEventListener('click', function(){
+        document.getElementById('ville').value = ""
+        navigator.geolocation.getCurrentPosition((position) => {
+            clearResults()
+            latSwitch = position.coords.latitude
+            lngSwitch = position.coords.longitude
+            updateResults(position.coords.latitude, position.coords.longitude);
+        });
+    })
 })
 
 async function getCity(){
