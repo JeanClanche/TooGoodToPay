@@ -17,26 +17,31 @@ document.addEventListener("DOMContentLoaded", async function() {
 async function getCity(){
     const value = document.getElementById('ville').value
     let url=`https://www.toogoodtogo.com/api/location?keyword=${value}&locale=fr`
+    url = `https://data.geopf.fr/geocodage/search?q=${value}`
     const json = await fetch(url)
     const raw = JSON.parse(await json.text())
-    const list = raw['response']['payload']
+    const list = raw['features']
 
     clearOptions()
-    for (let i = 0 ; i<list.length ; i++){
+    list.forEach((e) => {
         const tr = document.createElement('tr')
         const th = document.createElement('th')
-        th.textContent = list[i]['displayName']
+        if(e['properties']['type'] == "municipality"){
+            th.textContent = `${e['properties']['city']}, ${e['properties']['context']}`
+        }else{
+            th.textContent = e["properties"]['label']
+        }
         tr.append(th)
 
         tr.addEventListener('click', function(){
             clearOptions()
-            document.getElementById('ville').value = list[i]['displayName']
+            document.getElementById('ville').value = e["properties"]['label']
             clearResults()
-            updateResults(list[i]['center']['latitude'], list[i]['center']['longitude'])
+            updateResults(e['geometry']['coordinates'][1], e['geometry']['coordinates'][0])
         })
 
         document.getElementById('tbody').append(tr)
-    }
+    })
 
 }
 
